@@ -1,6 +1,8 @@
-# 已实现功能与接线 / Features and wiring
+# 已实现功能与接线
 
-记录对象为 ActronAir Classic Series 2 CRA130S/EVA130S、原厂 LR7-1W 墙控和 Waveshare ESP32-S3-RS485-CAN。本文说明项目实现和总线拓扑。[RS-485 协议及寄存器表](protocol.md)
+[English](implementation.en.md) · **简体中文** · [仓库首页](../README.zh-CN.md)
+
+记录对象为 ActronAir Classic Series 2 CRA130S/EVA130S、原厂 LR7-1W 墙控和 Waveshare ESP32-S3-RS485-CAN。本文说明项目实现和总线拓扑。[RS-485 协议及寄存器表](protocol.zh-CN.md)
 
 ## 已实现功能
 
@@ -42,9 +44,3 @@ flowchart LR
 ActronAir 手册在墙控接线图上标注 `+12 V`。微雪板的 `VCC/GND` 指其 DC 7–36 V 电源螺丝端子。这里记录端子对应关系，现场带载电压和墙控电源可承受的额外负载尚未实测。[ActronAir Classic Series 2 室内机安装手册，第 15.01 节](https://docs.actronair.com.au/wp-content/uploads/0525-074-Install-Guide-Split-Ducted-Indoor-Classic-2-Ver.-10.pdf) · [Waveshare 板卡资料](https://docs.waveshare.com/ESP32-S3-RS485-CAN)
 
 图示记录的是低压墙控侧拓扑。核对端子请以机型和板卡丝印为准，改动布线前应隔离空调电源。微雪板的 120 Ω 跳帽应按实际总线端点和已有终端电阻决定。[Waveshare 终端电阻说明](https://docs.waveshare.com/ESP32-S3-RS485-CAN/FAQ)
-
-## English summary
-
-Implemented controls cover cooling on/off, a shared 16–30 °C setpoint in 0.5 °C increments, three fan speeds, and five zone switches with a minimum of one selected zone. The project provides a mobile PWA, Apple Home accessories, and WSS status updates. Passive captures verified original wall controller actions and subsequent host broadcasts. Current WSS testing covered connectivity with the bus disconnected. ESP32 write acceptance and end-to-end timing remain to be tested for that release.
-
-The indoor unit's four-wire wall controller cable reaches one junction. Both branches carry power, ground, and A/B in parallel. The LR7 uses its original terminals. The Waveshare board uses its DC power screw terminals (`POWER` to `VCC`, `GND` to `GND`) and its RS-485 `A+` and `B−` terminals. The voltage under load and the available current for the additional board have yet to be measured.

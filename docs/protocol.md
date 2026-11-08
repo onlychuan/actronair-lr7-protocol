@@ -1,5 +1,7 @@
 # ActronAir LR7-1W protocol reference
 
+**English** · [简体中文](protocol.zh-CN.md) · [Repository home](../README.md)
+
 This independently observed profile covers the LR7-1W wall controller and the Classic Series 2 CRA130S/EVA130S. It describes the first register page and the cooling, setpoint, fan speed, and zone-selection changes verified through original wall controller operations.
 
 ## Physical layer and framing
