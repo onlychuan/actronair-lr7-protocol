@@ -23,27 +23,28 @@
 
 ## 一根主线，一分二并联
 
-从**室内机主板**出来的原墙控主线先到分线点，再分成两路。**LR7 支路**继续接原来的 `POWER`、`GND`、`485 A`、`485 B`。**ESP32 支路**只把同一对 `485 A/B` 并接到微雪板的 RS-485 端子，微雪板的电源来自独立的 **5 V USB-C**。两台设备直接共享室内机的 A/B 总线，原墙控的通信路径为室内机主板 → 分线点 → LR7。
+从**室内机主板**出来的原墙控主线先到分线点，再分成两路。**LR7 支路**继续接原来的 `POWER`、`GND`、`485 A`、`485 B`。**微雪板支路**也接这四根线，原墙控线的 `POWER/GND` 接到微雪板电源螺丝端子的 `VCC/GND`，`485 A/B` 接到微雪板的 RS-485 端子。两台设备由同一条原线供电，并共享同一对 A/B。
 
 ```mermaid
 flowchart LR
     AC["ActronAir 室内机主板"] ---|"原墙控主线 · POWER / GND / A / B"| TAP["分线点"]
     TAP ---|"原供电及信号 · POWER / GND / A / B"| LR7["LR7-1W 原墙控"]
-    TAP ---|"只并接 RS-485 A / B"| ESP["Waveshare ESP32-S3-RS485-CAN"]
-    USB["独立 5 V USB 电源"] -->|"USB-C"| ESP
+    TAP ---|"VCC / GND 取电 · A+ / B− 通信"| ESP["Waveshare ESP32-S3-RS485-CAN"]
 ```
 
-| 线路 | 对应关系 |
-| --- | --- |
-| RS-485 A | 室内机 `485 A`、LR7 `485 A`、微雪板 RS-485 `A+` |
-| RS-485 B | 室内机 `485 B`、LR7 `485 B`、微雪板 RS-485 `B−` |
-| 原墙控供电 | 室内机 `POWER/GND` 到 LR7 `POWER/GND` |
-| 微雪板供电 | 独立 5 V 到微雪板 USB-C |
+| 原主线 | LR7 墙控端子 | 微雪板端子 |
+| --- | --- | --- |
+| `POWER` | `POWER` | 电源输入 `VCC` |
+| `GND` | `GND` | 电源输入 `GND` |
+| `485 A` | `485 A` | RS-485 `A+` |
+| `485 B` | `485 B` | RS-485 `B−` |
 
-分线点表示同一对 A/B 的电气并联。图示记录的是低压墙控侧拓扑。核对端子请以机型和板卡丝印为准，改动布线前应隔离空调电源。微雪板的 120 Ω 跳帽应按实际总线端点和已有终端电阻决定。[ActronAir Classic Series 2 室内机安装手册，第 15.01 节](https://docs.actronair.com.au/wp-content/uploads/0525-074-Install-Guide-Split-Ducted-Indoor-Classic-2-Ver.-8.pdf) · [Waveshare 板卡资料](https://docs.waveshare.com/ESP32-S3-RS485-CAN) · [Waveshare 终端电阻说明](https://docs.waveshare.com/ESP32-S3-RS485-CAN/FAQ)
+ActronAir 手册在墙控接线图上标注 `+12 V`。微雪板的 `VCC/GND` 指其 DC 7–36 V 电源螺丝端子。这里记录端子对应关系，现场带载电压和墙控电源可承受的额外负载尚未实测。[ActronAir Classic Series 2 室内机安装手册，第 15.01 节](https://docs.actronair.com.au/wp-content/uploads/0525-074-Install-Guide-Split-Ducted-Indoor-Classic-2-Ver.-10.pdf) · [Waveshare 板卡资料](https://docs.waveshare.com/ESP32-S3-RS485-CAN)
+
+图示记录的是低压墙控侧拓扑。核对端子请以机型和板卡丝印为准，改动布线前应隔离空调电源。微雪板的 120 Ω 跳帽应按实际总线端点和已有终端电阻决定。[Waveshare 终端电阻说明](https://docs.waveshare.com/ESP32-S3-RS485-CAN/FAQ)
 
 ## English summary
 
 Implemented controls cover cooling on/off, a shared 16–30 °C setpoint in 0.5 °C increments, three fan speeds, and five zone switches with a minimum of one selected zone. The project provides a mobile PWA, Apple Home accessories, and WSS status updates. Passive captures verified original wall controller actions and subsequent host broadcasts. Current WSS testing covered connectivity with the bus disconnected. ESP32 write acceptance and end-to-end timing remain to be tested for that release.
 
-The indoor unit's wall controller cable reaches one junction. One leg carries the original power, ground, and A/B lines to the LR7. The other taps A and B in parallel at the Waveshare RS-485 terminals. A separate 5 V USB-C supply powers the ESP32 board.
+The indoor unit's four-wire wall controller cable reaches one junction. Both branches carry power, ground, and A/B in parallel. The LR7 uses its original terminals. The Waveshare board uses its DC power screw terminals (`POWER` to `VCC`, `GND` to `GND`) and its RS-485 `A+` and `B−` terminals. The voltage under load and the available current for the additional board have yet to be measured.

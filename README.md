@@ -8,7 +8,7 @@ Independent protocol notes for the ActronAir Classic Series 2 CRA130S/EVA130S wi
 
 这是 ActronAir LR7-1W 墙控总线的公开协议笔记，整理了 9600/8N1 通信、帧格式、CRC、主机轮询，以及开关、风速、统一设定温度和五个分区的已观测字段。协议参考区分实测、候选解释和未知字段。示例是人工构造的测试数据，适合离线解码。
 
-项目已实现制冷开关、16–30 °C 统一调温、三档风速、五个分区开关、手机 PWA 和 Apple「家庭」配件。室内机原墙控主线在分线点一分二。LR7 保留原供电和 A/B，ESP32 并接同一对 A/B，通过 USB-C 独立供电。各项实测范围见[功能与接线说明](docs/implementation.md)。
+项目已实现制冷开关、16–30 °C 统一调温、三档风速、五个分区开关、手机 PWA 和 Apple「家庭」配件。室内机原墙控主线在分线点一分二，LR7 和微雪板共用 `POWER/GND` 供电和 `485 A/B` 总线。微雪板通过 `VCC/GND` 电源螺丝端子取电。各项实测范围见[功能与接线说明](docs/implementation.md)。
 
 The observations describe one equipment combination. Request flags were observed during original wall controller operations and matched subsequent system broadcasts. Compatibility with other models and transmission by a third-party controller require separate verification.
 
